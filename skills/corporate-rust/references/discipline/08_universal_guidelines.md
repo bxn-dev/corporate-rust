@@ -20,9 +20,13 @@ For local overrides of project-wide lints, prefer `#[expect]` with a reason so s
 
 Use structured events with named properties and message templates; avoid eagerly formatting strings. Include properties in the template where useful, and name events hierarchically as `<component>.<operation>.<state>`. Use established telemetry attribute conventions for common fields when needed. Never log sensitive data in plaintext; redact items such as email addresses, identifying paths, secret-bearing filenames, personal data, and session identifiers. In Rust formatting macros, escaped braces can preserve literal template placeholders for later formatting.
 
+## Corporate rule: panics
+
+Report expected failures normally, including in developer CLIs. Panic on detected programming errors that violate invariants, unless a binding project rule prohibits panics; in that case use the project's prescribed failure path.
+
 ## Panics and correctness
 
-Panics signal that the program should stop, not a recoverable error channel. Code must remain panic-safe even if a panic is caught; do not assume it will be caught. Report expected failures normally. Detected programming errors that violate invariants must panic unless a binding project rule prohibits panics, in which case follow its prescribed failure path. Do not introduce errors that callers cannot meaningfully handle.
+Panics signal that the program should stop, not a recoverable error channel. Code must remain panic-safe even if a panic is caught; do not assume it will be caught. Do not introduce errors that callers cannot meaningfully handle.
 
 Detection of contract violations need not be added where impossible or costly. Invalid input to an inherently fallible parser is an expected failure, not necessarily a contract violation. Panics can also occur in const contexts, explicitly requested operations such as `unwrap`, and on poisoned locks. Explore type-level designs that prevent invalid states.
 
@@ -30,26 +34,6 @@ Detection of contract violations need not be added where impossible or costly. I
 
 Public types should implement `Debug`; types holding sensitive data should implement it manually and must have unit tests ensuring secrets are not disclosed. Types intended for users or developers to read, including errors and string wrappers, should implement `Display` according to Rust conventions. Apply the same sensitive-data protections to `Display`.
 
-## Static verification
+## Corporate rule: compliance markers
 
-Projects should use compiler lints, Clippy, rustfmt, dependency vulnerability auditing, feature-combination checks, unused-dependency detection, and Miri for unsafe code. These can run locally and should be part of check-in gates. Miri is not a proof of soundness.
-
-In addition to defaults, projects should enable the compiler lints `ambiguous_negative_literals`, `missing_debug_implementations`, `redundant_imports`, `redundant_lifetimes`, `trivial_numeric_casts`, `unsafe_op_in_unsafe_fn`, and `unused_lifetimes` at warning level.
-
-Enable the major Clippy groups `cargo`, `complexity`, `correctness`, `pedantic`, `perf`, `style`, and `suspicious`; `nursery` is optional because of possible false positives. Opt out of unwanted lints individually. Consider these restriction lints at warning level:
-
-```text
-allow_attributes_without_reason  as_pointer_underscore
-assertions_on_result_states      clone_on_ref_ptr
-deref_by_slicing                 disallowed_script_idents
-empty_drop                       empty_enum_variants_with_brackets
-empty_structs_with_brackets      fn_to_numeric_cast_any
-if_then_some_else_none            map_err_ignore
-redundant_type_annotations       renamed_function_params
-semicolon_outside_block           string_to_string
-undocumented_unsafe_blocks       unnecessary_safety_comment
-unnecessary_safety_doc           unneeded_field_pattern
-unused_result_ok
-```
-
-Allowing `literal_string_with_formatting_args` may be necessary for structured logging templates.
+Keep dated guideline-compliance comments out of Rust files.

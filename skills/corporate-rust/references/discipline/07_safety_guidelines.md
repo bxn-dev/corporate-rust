@@ -10,9 +10,13 @@ Use unsafe only for a valid reason: a novel abstraction, measured performance, o
 - Test adversarial use, including panicking closures and misbehaving safe traits such as `Deref`, `Clone`, and `Drop`. Invalidate or poison an abstraction where necessary if a closure panics.
 - Explain the safety of every unsafe use, follow Rust's unsafe code rules, and pass Miri including adversarial cases.
 
-## Performance
+## Corporate rule: unsafe for performance
 
-Use unsafe for performance only if a reproducible benchmark demonstrates a gain over the safe alternative on a representative workload. Encapsulate it and provide a `SAFETY:` argument establishing every unsafe operation's preconditions on every reachable path for all permitted inputs. Test boundary cases and run them under Miri. Tests and Miri do not prove soundness. If the gain or safety argument is missing, or Miri fails or cannot be run, retain the safe version. Explain safety both for calls to unsafe methods and implementations of unchecked APIs.
+A safe alternative does not rule out `unsafe`. Use unsafe for performance only if a reproducible benchmark demonstrates a gain over the safe alternative on a representative workload. Encapsulate it and provide a `SAFETY:` argument establishing every unsafe operation's preconditions on every reachable path for all permitted inputs. Test boundary cases and run them under Miri. Tests and Miri do not prove soundness. If the gain or safety argument is missing, or Miri fails or cannot be run, retain the safe version.
+
+## Performance safety details
+
+Explain safety both for calls to unsafe methods and implementations of unchecked APIs.
 
 ## FFI
 

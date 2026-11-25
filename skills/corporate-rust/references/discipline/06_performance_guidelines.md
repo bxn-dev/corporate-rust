@@ -8,4 +8,4 @@ Optimize libraries for throughput, including items per CPU cycle, without neglec
 
 Long-running async CPU work should yield cooperatively at intervals, including between batches. Regular I/O await points may already yield. If work duration is unpredictable, use the hosting runtime's budget APIs where available. Balance responsiveness against switching and cache costs; 10–100 microseconds of CPU work between yields is a starting point, not a guarantee.
 
-For performance-related unsafe code, apply the benchmark, safety argument, boundary testing, and Miri requirements in [safety](07_safety_guidelines.md).
+For performance-related unsafe code, apply the [performance gate](07_safety_guidelines.md#corporate-rule-unsafe-for-performance).
