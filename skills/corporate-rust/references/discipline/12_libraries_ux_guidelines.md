@@ -10,17 +10,25 @@ Avoid visibly nested parameterized types, especially service types users must na
 
 Implement essential functionality as inherent methods; trait implementations should forward to them.
 
+## Corporate rule: borrowed inputs
+
+For read-only text use `&str`, and for borrowed contiguous sequences use `&[T]`, not `impl AsRef<_>`. Preserve trait-required signatures. APIs that only iterate need not require contiguous storage.
+
 ## Inputs
 
-For read-only text use `&str`, and for borrowed contiguous sequences use `&[T]`, not `impl AsRef<_>`. Preserve trait-required signatures. APIs that only iterate need not require contiguous storage. For other clear reference hierarchies, such as paths, consider `impl AsRef<_>` for function parameters where ownership is unnecessary or copying is cheap; do not generally infect stored types with such bounds. When ownership is needed, weigh ergonomics against copying cost.
+For other clear reference hierarchies, such as paths, consider `impl AsRef<_>` for function parameters where ownership is unnecessary or copying is cheap; do not generally infect stored types with such bounds. When ownership is needed, weigh ergonomics against copying cost.
 
 For one-shot initialization I/O, accept an appropriate I/O trait rather than a concrete file: use `std::io::Read` or `Write` synchronously and runtime-independent async I/O traits for functions targeting multiple runtimes. Types performing continuous runtime-specific I/O need an appropriate runtime abstraction.
 
 Functions accepting numeric ranges must use a range type or trait, not separate hand-rolled bounds. Prefer `impl RangeBounds<T>` when arbitrary ranges are supported.
 
+## Corporate rule: library errors
+
+Preserve relevant context and underlying causes for I/O and chained failures. A small error that fully describes the failure may be `Copy`; do not discard context or causes to derive it, and do not add a `Backtrace` solely for a template.
+
 ## Errors
 
-Use situation-specific library error structs, with reusable error types where appropriate and separate types for unrelated failures. Preserve relevant context and underlying causes for I/O and chained failures. A small error that fully describes the failure may be `Copy`; do not discard context or causes to derive it, and do not add a `Backtrace` solely for a template. Where useful, provide contextual accessors and capture diagnostic backtraces appropriately.
+Use situation-specific library error structs, with reusable error types where appropriate and separate types for unrelated failures. Where useful, provide contextual accessors and capture diagnostic backtraces appropriately.
 
 For mixed failure modes, an internal error kind can distinguish cases; expose actionable `is_xxx()` methods rather than exposing internal, unhandleable cases. Error structs must implement `Display` and `std::error::Error`, reporting a useful summary and relevant cause and diagnostic information.
 

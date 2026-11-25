@@ -10,3 +10,7 @@ A crate is a compilation unit with a root module; modules organize code and cont
 - Prefer placing trait imports in functions unless their methods are used extensively throughout the file.
 - Qualify free functions from other modules when the module name clarifies the call, as in `config::load()`. Import an unambiguous function directly when qualification adds no useful context or the module name collides.
 - Normally import types and traits and use them unqualified. Exceptions: ambiguity (renaming is also possible), large groups of types, macros or generated code, and very large import blocks in code with many dependencies.
+
+## Corporate rule: public re-exports
+
+List exported names explicitly. Use a glob only for a technical reason, such as exposing the same interface from target-specific implementations, not to shorten an export list. This does not prohibit `use super::*` inside an inline test module.

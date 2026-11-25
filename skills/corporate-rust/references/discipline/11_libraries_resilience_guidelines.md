@@ -12,6 +12,6 @@ Guard test utilities with feature flags, including mocks, sensitive-data inspect
 
 ## Exports and types
 
-List public re-exports explicitly. A glob is allowed for technical reasons, such as forwarding the same interface from target-specific implementations, not merely to shorten the list.
+For export lists, follow [public re-exports](../module-imports.md#corporate-rule-public-re-exports).
 
 Use the strongest appropriate standard type early in an API flow, such as `Path` or `PathBuf` rather than strings for OS paths. Follow conventional numeric API boundaries: ordinary numbers are normally preferable to wrappers such as `NonZero<usize>`.
